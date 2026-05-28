@@ -18,10 +18,14 @@ def fetch_card_data(card):
                 'mana_cost': card['card_faces'][i]['mana_cost'].translate(remove_braces), 
                 'type_line': card['card_faces'][i]['type_line'], 
                 'oracle_text': card['card_faces'][i]['oracle_text'], 
+                # Set the power and toughness if the face is a creature
                 'power_toughness': card['card_faces'][i]['power'] + '/' 
                     + card['card_faces'][i]['toughness'] 
                     if 'Creature' in card['card_faces'][i]['type_line'] else '', 
-                'art': card['card_faces'][i].get('image_uris', card['image_uris'])['art_crop'],
+                # Check if card has different artworks for each face
+                'art': card['card_faces'][i]['image_uris']['art_crop'] 
+                    if 'image_uris' in card['card_faces'][i] 
+                    else card['image_uris']['art_crop'],
             }
             card_data.append(face_data)
     else:
@@ -31,6 +35,7 @@ def fetch_card_data(card):
             'mana_cost': card['mana_cost'].translate(remove_braces), 
             'type_line': card['type_line'], 
             'oracle_text': card['oracle_text'], 
+            # Set the power and toughness if the face is a creature
             'power_toughness': card['power'] + '/' + card['toughness'] 
                 if 'Creature' in card['type_line'] else '', 
             'art': card['image_uris']['art_crop']
